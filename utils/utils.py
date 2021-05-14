@@ -20,6 +20,54 @@ def t_lut(a, c):
     lut = a*dom + c
     return lut
 
+def t_lut_tramos(params):
+    """
+    Aplica una transformación LUT definida por tramos.
+
+    Recibe una lista con N tuplas de la siguiente forma:
+
+    [(l0, a0, c0), (l1, a1, c1), ... (a_n-1, c_n-1)]
+
+    El primer tramo va de 0 a l0 y el último va de l(n-2) al máximo
+    de intensidad del canal.
+
+    l_i: Limite superior del tramo
+    a_i: Ganancia en el tramo (pendiente)
+    c_i: Offset en el tramo (ordenada al origen)
+
+    Nota: La última tupla de la lista tiene solo dos elementos, ya que el
+    limite superior es siempre el valor maximo de intensidad del canal (255)
+
+    Funciona solo si `params` tiene al menos dos elementos!
+
+    Ejemplo:
+    
+    Tramo de 0 a 100 no hace nada (funcion identidad) y de ahí en adelante
+    es la funcion constante s = 255.
+
+    t_lut_tramos([100, 1, 0], [0, 255])
+    """
+    dom = np.array(np.arange(256))
+
+    def lut(a, c):
+        return lambda x: a * x + c
+
+    condlist = []
+    funclist = []
+
+    # Tupla por tupla definimos una mascara en la cual se aplica la funcion
+    # y tambien la funcion a aplicar.
+    prev = 0
+    for l, a, c in params[:-1]:
+        condlist.append(np.logical_and(dom < l, dom >= prev))
+        funclist.append(lut(a, c))
+        prev = l
+    # Ultimo tramo (el limite superior esta definido implicitamente)
+    (a_n, c_n) = params[-1]
+    funclist.append(lut(a_n, c_n))
+
+    return np.piecewise(dom, condlist, funclist)
+
 def t_log(c):
     """
     Devuelve una transformación logarítmica con la forma:
