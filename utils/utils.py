@@ -99,3 +99,30 @@ def get_y_values(x1,y1,x2,y2):
         perfil[i] = int(y1 + m*(x2-x1))
         
     return perfil
+
+
+def mse(imgA, imgB):
+    """
+    Calcula el MSE (Mean-Squared Error) entre dos imágenes de igual tamaño
+    """
+
+    assert imgA.shape == imgB.shape, f"ERROR, las imágenes deben ser del mismo tamaño {imgA.shape} vs {imgB.shape}"
+
+    err = np.sum((imgA.astype("float") - imgB.astype("float"))**2)
+    err /= float(imgA.shape[0] * imgA.shape[1])
+    return err
+
+def padding(img, pad=1, pad_number=0):
+    """
+    Agrega un borde de \'pad\' píxeles de ancho, con el valor dado por \'pad_number\'
+    Por defecto se hace un padding con '\0\'
+
+    @param pad: ancho del padding
+    @param pad_number: valor con el que se hará el padding
+    """
+    assert pad > 0, f"ERROR, el valor de \'pad\' debe ser mayor a {0}"
+
+    new_img = np.ones((img.shape[0]+2*pad, img.shape[1]+2*pad), dtype='uint8')*pad_number
+    new_img[pad:-pad, pad:-pad] = img
+    
+    return new_img
