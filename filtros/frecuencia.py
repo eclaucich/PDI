@@ -43,7 +43,7 @@ def get_modulo_fase(img):
 
 def eliminar_modulo(img):
     """
-    Genera una que solo mantiene la fase original y contiene un módulo unitario
+    Genera una imagen que solo mantiene la fase original y contiene un módulo unitario
     """
     dft = cv.dft(np.float32(img), flags = cv.DFT_COMPLEX_OUTPUT)
 
@@ -65,6 +65,13 @@ def eliminar_fase(img):
 
 
 def nueva_modulo_fase(img, mod, fas):
+    """
+    Genera una nueva imagen a partir de \'img\' cambiándole su módulo y fase.
+
+    @param img: imagen original
+    @param mod: módulo que tendrá la nueva imagen
+    @param fas: fase que tendrá la nueva imagen
+    """
     #Obtener transformada de img
     dft = cv.dft(np.float32(img), flags=cv.DFT_COMPLEX_OUTPUT)
     dft = np.fft.fftshift(dft)
@@ -86,7 +93,6 @@ def aplicar_filtro(img, filtro):
     Aplica un filtro en frecuencia.
 
     @param filtro: filtro con el mismo tamaño que la imagen
-    @param mode: bilbioteca con la que se calcula la transformada de Fourier. (numpy/opencv)
     """
 
     assert img.shape == filtro.shape, f'ERROR, la imagen y el filtro deben tener los mismos tamaños\n {img.shape} vs {filtro.shape}'
@@ -125,7 +131,7 @@ def FPB_ideal(fc, img_shape):
     return FPB
 
 
-def FPB_butt(fc, n, image_shape):
+def FPB_butt(fc, n, img_shape):
     """
     Genera un filtro pasa bajos Butterworth.
 
@@ -139,11 +145,11 @@ def FPB_butt(fc, n, image_shape):
     if(fc<0 or fc >255):
         warnings.warn('\'fc\' fuera de rango. Se hará clipping a [0, 255]')
 
-    filas = np.zeros((1, image_shape[0])); filas[0,:] = np.arange(image_shape[0])
-    colum = np.zeros((image_shape[1], 1)); colum[:,0] = np.arange(image_shape[1])
+    filas = np.zeros((1, img_shape[0])); filas[0,:] = np.arange(img_shape[0])
+    colum = np.zeros((img_shape[1], 1)); colum[:,0] = np.arange(img_shape[1])
     
-    half_f = int(image_shape[0]/2)
-    half_c = int(image_shape[1]/2)
+    half_f = int(img_shape[0]/2)
+    half_c = int(img_shape[1]/2)
     
     D = np.sqrt((filas-half_f)**2 + (colum-half_c)**2)
     FPB = 1 / (1 + (D/fc)**(2*n))

@@ -28,7 +28,7 @@ def eq_local(img):
     return cl 
 
 
-def plot_histo(imgs, figsize=(10,10), patron=(1,1), gray=True, eq='normal', titulos=[]):
+def plot_histo(imgs, figsize=(20,5), patron=(1,2), gray=True, eq='normal', titulos=[]):
     """
     Dibuja una imagen y su histograma
 

@@ -20,7 +20,7 @@ def get_kernel_cruz(size):
     Genera un kernel cruz de tamaño size X size donde sólo la cruz principal tiene valores != 0
     """
     
-    assert size > 0, 'ERROR, el tamaño del kernel no puede ser menor que 0'
+    assert size > 0, 'ERROR, el tamaño del kernel no puede ser menor o igual a 0'
 
     kernel = np.zeros((size, size))
     mitad = int(size/2)
@@ -35,7 +35,7 @@ def get_kernel_suma_1(size):
     Genera un kernel de suma 1
     """
     
-    assert size > 0, 'ERROR, el tamaño del kernel no puede ser menor que 0'
+    assert size > 0, 'ERROR, el tamaño del kernel no puede ser menor o igual a 0'
 
     kernel = np.zeros((size,size))
     kernel[:,int(size/2)] = -1
@@ -49,7 +49,7 @@ def get_kernel_suma_0(size):
     Genera un kernel de suma 0
     """
     
-    assert size > 0, 'ERROR, el tamaño del kernel no puede ser menor que 0'
+    assert size > 0, 'ERROR, el tamaño del kernel no puede ser menor o igual a 0'
 
     kernel = np.ones((size,size))*-1
     kernel[int(size/2),int(size/2)] = size*size-1
