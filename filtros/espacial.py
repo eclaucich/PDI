@@ -61,37 +61,6 @@ def getkernel_prom(size):
     return np.ones((size,size))/(size**2)
 
 
-def getkernel_cruz(size, centro=None, cruz=None):
-    """
-    Genera un kernel cruz de tamaño \'size X size\'.
-    
-    Por defecto hace el kernel con el mismo valor en toda la cruz.
-
-    @param centro: valor del centro del kernel
-    @param cruz: valor de la cruz del kernel
-    """
-    
-    assert size > 0, 'ERROR, el tamaño del kernel no puede ser menor o igual a 0'
-    
-    kernel = np.zeros((size, size))
-    mitad = int(size/2)
-
-    if(centro!=None or cruz!=None):
-        assert centro != None, "ERROR, se encesita un valor de \'centro\'"
-        assert cruz != None, "ERROR, se necesita un valor de \'cruz\'"
-        
-        kernel[:,mitad] = cruz
-        kernel[mitad,:] = cruz
-        kernel[mitad, mitad] = centro
-
-    else:
-        valor_celda = 1/(size*2-1)
-        kernel[:,mitad] = valor_celda
-        kernel[mitad,:] = valor_celda
-
-    return kernel
-
-
 def aplicar_mascaradifusa(img, kernel):
     """
     Aplica un filtro de máscara difusa a una imagen.
