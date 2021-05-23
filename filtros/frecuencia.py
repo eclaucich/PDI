@@ -242,10 +242,9 @@ def aplicar_homomorfico(img, low, high, fc, n):
 
     assert n>=0, 'El orden del filtro no puede ser negativo'
 
-    assert low < high, '\'low\' debe ser menor que \'high\''
-
     if(fc<0 or fc >255):
         warnings.warn('\'fc\' fuera de rango. Se hará clipping a [0, 255]')
+        fc = fc.clip(min=0, max=255)
 
     #LOG
     log_img = np.log(img.clip(0.00001))
@@ -255,19 +254,19 @@ def aplicar_homomorfico(img, low, high, fc, n):
     
     #FILTRO H
     image_shape = img.shape
-    filas = np.zeros((1, image_shape[0])); filas[0,:] = np.arange(image_shape[0])
-    colum = np.zeros((image_shape[1], 1)); colum[:,0] = np.arange(image_shape[1])
+    filas = np.zeros((1, image_shape[1])); filas[0,:] = np.arange(image_shape[1])
+    colum = np.zeros((image_shape[0], 1)); colum[:,0] = np.arange(image_shape[0])
     
-    half_f = int(image_shape[0]/2)
-    half_c = int(image_shape[1]/2)
+    half_f = int(image_shape[1]/2)
+    half_c = int(image_shape[0]/2)
     
     D = np.sqrt((filas-half_f)**2 + (colum-half_c)**2).clip(min=0.0001)
-    H = low + (high / (1 + (fc/D)**(2*n)))
+    H = low + ((high-low) / (1 + (fc/D)**(2*n)))
     
-    h_img = np.multiply(H.T, dft_img)
+    h_img = np.multiply(H, dft_img)
     
     #IDFT
     idft_img = np.fft.ifft2(h_img)
     
     #EXP
-    return (np.abs(np.exp(idft_img)), H)
+    return (np.abs(np.exp(np.real(idft_img))), H)
