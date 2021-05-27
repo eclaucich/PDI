@@ -15,7 +15,7 @@ def get_intensidad(img):
     return ((r+g+b)/3).astype('uint8')
 
 
-def plot_color_channels(img, figsize=(20,15), patron=(1,4), space='rgb'):
+def plot_color_channels(img, figsize=(20,15), patron=(1,4), space='rgb', vmin=0, vmax=255):
     """
     Dibuja la imagen original y los distintos canales de la misma.\n
     La imagen debe estar en RGB.
@@ -28,7 +28,7 @@ def plot_color_channels(img, figsize=(20,15), patron=(1,4), space='rgb'):
     plt.figure(figsize=figsize)
     plt.subplot(patron[0],patron[1],1)
     plt.title('ORIGINAL')
-    plt.imshow(img)
+    plt.imshow(img, vmin=vmin, vmax=vmax)
     
     channel_names = ['R', 'G', 'B']
     channels = cv.split(img)
@@ -43,15 +43,15 @@ def plot_color_channels(img, figsize=(20,15), patron=(1,4), space='rgb'):
 
     plt.subplot(patron[0],patron[1],2)
     plt.title(channel_names[0])
-    plt.imshow(channels[0], cmap='gray')
+    plt.imshow(channels[0], cmap='gray', vmin=vmin, vmax=vmax)
     
     plt.subplot(patron[0],patron[1],3)
     plt.title(channel_names[1])
-    plt.imshow(channels[1], cmap='gray')
+    plt.imshow(channels[1], cmap='gray', vmin=vmin, vmax=vmax)
     
     plt.subplot(patron[0],patron[1],4)
     plt.title(channel_names[2])
-    plt.imshow(channels[2], cmap='gray')
+    plt.imshow(channels[2], cmap='gray', vmin=vmin, vmax=vmax)
 
 
 def RGB2HSV(img):

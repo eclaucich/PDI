@@ -11,24 +11,27 @@ def hist_normal(img):
     """
     Calcula el histograma de la imagen
     """
+    img = img.astype('uint8')
     return cv.calcHist([img], [0], None, [256], [0,256])
 
 def eq_global(img):
     """
     Calcula el histograma ecualizado globalmente de la imagen
     """
+    img = img.astype('uint8')
     return cv.equalizeHist(img)
 
 def eq_local(img):
     """
     Calcula el histograma ecualizado localmente (CLAHE) de la imagen
     """
+    img = img.astype('uint8')
     clahe = cv.createCLAHE()
     cl = clahe.apply(img)
-    return cl 
+    return cl
 
 
-def plot_histo(imgs, figsize=(20,5), patron=(1,2), gray=True, eq='normal', titulos=[]):
+def plot_histo(imgs, figsize=(20,5), patron=(1,2), gray=True, eq='normal', titulos=[], vmin=0, vmax=255):
     """
     Dibuja una imagen y su histograma
 
@@ -53,14 +56,14 @@ def plot_histo(imgs, figsize=(20,5), patron=(1,2), gray=True, eq='normal', titul
             img = eq_local(img)
 
         if(gray):
-            plt.imshow(img, cmap='gray')
+            plt.imshow(img.astype('uint8'), cmap='gray', vmin=vmin, vmax=vmax)
         else:
-            plt.imshow(img)
+            plt.imshow(img.astype('uint8'), vmin=vmin, vmax=vmax)
 
         plt.subplot(patron[0], patron[1], (2*i)+2)
         if(len(titulos)>0): 
             plt.title(titulos[(2*i)+1])
-        plt.hist(img.ravel(), 256, [0,256])
+        plt.hist((img.astype('uint8')).ravel(), 256, [0,256])
 
     
 #ESTADSITICAS HISTOGRAMAS

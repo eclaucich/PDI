@@ -88,7 +88,7 @@ def t_pot(gamma, c):
 
 
 ##GRAFICAS
-def plot(imgs, figsize=(10,10), patron=(1,1), gray=True, titulos=[]):
+def plot(imgs, figsize=(10,10), patron=(1,1), gray=True, titulos=[], vmin=0, vmax=255):
     """
     Dibuja una serie de imagenes
     """
@@ -104,9 +104,9 @@ def plot(imgs, figsize=(10,10), patron=(1,1), gray=True, titulos=[]):
         if(len(titulos)>0): 
             plt.title(titulos[i])
         if(gray):
-            plt.imshow(img, cmap='gray')
+            plt.imshow(img.astype('uint8'), cmap='gray', vmin=vmin, vmax=vmax)
         else:
-            plt.imshow(img)
+            plt.imshow(img.astype('uint8'), vmin=vmin, vmax=vmax)
 
 
 #BIT MAP

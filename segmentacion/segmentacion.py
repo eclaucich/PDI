@@ -145,7 +145,7 @@ def hough(img, rho, theta, umbral):
 #Utiliza para el calucla de regiones por crecimiento
 def _flooding(img, semilla, visitados, res, lim_inf, lim_sup):
     
-    if(visitados[x,y]==1):
+    if(visitados[semilla]==1):
         return res
 
     x = semilla[0]
@@ -180,7 +180,7 @@ def _flooding(img, semilla, visitados, res, lim_inf, lim_sup):
     return res
 
 
-def floodind(img, semilla, lims):
+def flooding(img, semilla, lims):
     """
     Segmentación mediante crecimiento de regiones.
     El criterio a cumplir para la región es el gradiente entre el pixel semilla y el vecino.
