@@ -251,6 +251,7 @@ def aplicar_homomorfico(img, low, high, fc, n):
     
     #DFT
     dft_img = np.fft.fft2(log_img)
+    dft_img = np.fft.fftshift(dft_img)
     
     #FILTRO H
     image_shape = img.shape
@@ -266,7 +267,8 @@ def aplicar_homomorfico(img, low, high, fc, n):
     h_img = np.multiply(H, dft_img)
     
     #IDFT
-    idft_img = np.fft.ifft2(h_img)
+    idft_img = np.fft.ifftshift(h_img)
+    idft_img = np.fft.ifft2(idft_img)
     
     #EXP
     return (np.abs(np.exp(np.real(idft_img))), H)
