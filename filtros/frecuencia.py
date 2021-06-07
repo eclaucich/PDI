@@ -272,3 +272,61 @@ def aplicar_homomorfico(img, low, high, fc, n):
     
     #EXP
     return (np.abs(np.exp(np.real(idft_img))), H)
+
+def filtro_gaussiano(dim, fc, pasa = 'bajo'):
+
+    """
+    devuelve filtro gaussiano
+    @param dim: dimension de la imagen de entrada (como imagen_shape)
+    @param pasa: bajo o alto
+    @param fc: frecuencia de corte en [0, 255]
+    """
+    if(fc<0 or fc >255):
+        warnings.warn('\'fc\' fuera de rango. Se hará clipping a [0, 255]')
+    filas = np.zeros((1, dim[0])); filas[0,:] = np.arange(dim[0])
+    colum = np.zeros((dim[1], 1)); colum[:,0] = np.arange(dim[1])    
+    half_f = int(dim[0]/2)
+    half_c = int(dim[1]/2)    
+    D = np.sqrt((filas-half_f)**2 + (colum-half_c)**2)
+
+    FG = np.exp(-(D**2) / (2 * (fc**2)))
+    
+    if(pasa=='alto'):
+        FG= -1*FG+255 
+    return FG.T
+
+def pasa_bajo_alto_ideal(dim, fc, pasa = 'bajo'): 
+    """
+    devuelve filtro ideal
+    @param dim: dimension de la imagen de entrada (como imagen_shape)
+    @param pasa: bajo o alto
+    @param fc: frecuencia de corte en [0, 255]
+    """
+    filtro = np.zeros(dim)
+    filtro = cv.circle(filtro,(int(dim[1]/2),int(dim[0]/2)),fc,(255,255,255),-1)
+    if(pasa=='alto'):
+        filtro= -1*filtro+255 
+    return np.fft.ifftshift(filtro)
+
+def filtro_butterworth(dim, fc, orden, pasa = 'bajo'):
+    """
+    devuelve filtro butterworth
+    @param dim: dimension de la imagen de entrada (como imagen_shape)
+    @param pasa: bajo o alto
+    @param fc: frecuencia de corte en [0, 255]
+    @param n: orden del filtro 
+    """
+    assert orden>=0, 'El orden del filtro no puede ser negativo'
+    if(fc<0 or fc >255):
+        warnings.warn('\'fc\' fuera de rango. Se hará clipping a [0, 255]')
+    filas = np.zeros((1, dim[0])); filas[0,:] = np.arange(dim[0])
+    colum = np.zeros((dim[1], 1)); colum[:,0] = np.arange(dim[1])    
+    half_f = int(dim[0]/2)
+    half_c = int(dim[1]/2)    
+    D = np.sqrt((filas-half_f)**2 + (colum-half_c)**2)
+    
+    FB = 1 / (1 + (D/fc)**(2*orden))   
+    
+    if(pasa=='alto'):
+        FB= -1*FB+255 
+    return FB.T
